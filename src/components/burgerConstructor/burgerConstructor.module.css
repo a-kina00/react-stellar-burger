@@ -1,0 +1,29 @@
+.list {
+    display: grid;
+    grid-template-columns: repeat(1, 100%);
+    gap: 16px;
+    justify-items: end;
+
+    padding-left: 0;
+    list-style: none;
+    overflow: auto;
+    max-height: 100%;
+    
+}
+
+.account {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.section {
+    max-height: 100%;
+    max-width: 600px;
+}
+
+.account_scaled {
+    composes: account;
+    
+    transform: scale(1.6);
+}

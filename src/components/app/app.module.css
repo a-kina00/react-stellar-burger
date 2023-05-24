@@ -1,7 +1,15 @@
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  max-height: 100vh;
   background-color: #131316;
   color: #f2f2f3;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+
+  max-width: 100%;
+  max-height: calc(100vh - 350px);
 }
