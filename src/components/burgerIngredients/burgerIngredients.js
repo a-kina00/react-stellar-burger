@@ -7,6 +7,7 @@ import Ingredient from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function BurgerIngredients(props) {
+    
     const [current, setCurrent] = React.useState('1');
 
     const setTab = (tab) => {

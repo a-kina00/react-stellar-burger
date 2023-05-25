@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { data } from "../../utils/data";
 import ingredientStyles from './ingredient.module.css';
 
@@ -6,7 +8,6 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function Ingredient(props) {
-
     const ingredient = findIngredient();
     const [current, setCurrent] = React.useState(0);
     let count = props.count;
@@ -36,6 +37,11 @@ function Ingredient(props) {
 
     );
 }
+
+Ingredient.propTypes = {
+    count: PropTypes.number,
+    id: PropTypes.string.isRequired,
+  }
 
 
 export default Ingredient;
