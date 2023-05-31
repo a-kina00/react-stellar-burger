@@ -1,6 +1,8 @@
 import React from 'react';
 import { data } from "../../utils/data";
 import burgerConstructorStyles from './burgerConstructor.module.css'
+import Modal from "../../hocs/modal";
+import OrderDetails from '../orderDetails/orderDetails';
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -8,6 +10,8 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import ConstructorBlock from '../constructorBlock/constructorBlock'
 
 function BurgerConstructor(props) {
+    const OrderDetailsModal = Modal(OrderDetails);
+    const [modalActive, handleModal] = React.useState({isVisible: false});
 
     let count = 0;
     const [account, setCurrent] = React.useState(0);
@@ -17,8 +21,20 @@ function BurgerConstructor(props) {
         setCurrent(count / 2)
     }
 
+    React.useEffect(() => {
+        const close = (e) => {
+            if (e.keyCode === 27) {
+                handleModal({ isVisible: false })
+            }
+        }
+        window.addEventListener('keydown', close)
+        return () => window.removeEventListener('keydown', close)
+    }, []);
+
+
     return (
         <section className={burgerConstructorStyles.section + ' ' + 'ml-15 mt-25'}>
+            <OrderDetailsModal props={{number : '036872'}} isActive={modalActive} handleModal={handleModal}/>
             <ConstructorBlock id={data[0]._id} position='top' updateData={updateData} />
             <ul className={burgerConstructorStyles.list + ' ' + 'custom-scroll pr-2 mt-4 mb-4'}>
                 <ConstructorBlock id={data[2]._id} updateData={updateData} />
@@ -37,7 +53,8 @@ function BurgerConstructor(props) {
                         <p className="text text_type_digits-default mr-2">{account}</p>
                         <CurrencyIcon type="primary" />
                     </div>
-                    <Button htmlType="button" type="primary" size="large">
+                    <Button htmlType="button" type="primary" size="large"
+                    onClick={() => {handleModal({isVisible : true})}}>
                         Оформить заказ
                     </Button>
                 </div>

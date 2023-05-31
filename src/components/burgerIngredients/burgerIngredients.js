@@ -1,5 +1,5 @@
 import React from 'react';
-import { data } from "../../utils/data";
+import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './burgerIngredients.module.css';
 
 import Ingredient from '../ingredient/ingredient';
@@ -7,15 +7,23 @@ import Ingredient from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function BurgerIngredients(props) {
-    
+
     const [current, setCurrent] = React.useState('1');
 
     const setTab = (tab) => {
         setCurrent(tab);
         const element = document.getElementById(tab);
         if (element) element.scrollIntoView({ behavior: "smooth" });
-      };
-    
+    };
+
+    function renderIngridient(type, list) {
+        const el = list.filter((element) => { return element.type === type });
+
+        const arr = el.map((item) => {
+            return <Ingredient key={item._id} id={item._id} count={0} props={el} />
+        })
+        return arr;
+    }
 
     return (
         <section className={burgerIngredientsStyles.section}>
@@ -35,36 +43,28 @@ function BurgerIngredients(props) {
             <ul className={burgerIngredientsStyles.list + ' ' + 'custom-scroll'}>
                 <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        <Ingredient id={data[0]._id} count={0} />
-                        <Ingredient id={data[14]._id} count={0} />
+                        {renderIngridient('bun', props.props)}
                     </div>
                 </li>
                 <li>
                     <h2 id='2' className="text text_type_main-medium">Соусы</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        <Ingredient id={data[3]._id} count={0} />
-                        <Ingredient id={data[6]._id} count={0} />
-                        <Ingredient id={data[5]._id} count={0} />
-                        <Ingredient id={data[9]._id} count={0} />
+                        {renderIngridient('sauce', props.props)}
                     </div>
                 </li>
                 <li>
                     <h2 id='3' className="text text_type_main-medium">Начинки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        <Ingredient id={data[1]._id} count={0} />
-                        <Ingredient id={data[2]._id} count={0} />
-                        <Ingredient id={data[4]._id} count={0} />
-                        <Ingredient id={data[7]._id} count={0} />
-                        <Ingredient id={data[8]._id} count={0} />
-                        <Ingredient id={data[10]._id} count={0} />
-                        <Ingredient id={data[11]._id} count={0} />
-                        <Ingredient id={data[12]._id} count={0} />
-                        <Ingredient id={data[13]._id} count={0} />
+                        {renderIngridient('main', props.props)}
                     </div>
                 </li>
             </ul>
         </section>
     );
+}
+
+Ingredient.propTypes = {
+    props: PropTypes.array.isRequired
 }
 
 export default BurgerIngredients;
