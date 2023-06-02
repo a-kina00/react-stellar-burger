@@ -7,9 +7,9 @@ import ModalStyles from './modal.module.css'
 import icon from '../images/icon 24x24.svg'
 import ModalOverlay from '../components/modalOverlay/modalOverlay';
 
-const Modal = ModalComponent => (props) => {
+const ModalComponent = (props) => {
 
-/*  React.useEffect(() => {
+    React.useEffect(() => {
         const close = (e) => {
             if (e.keyCode === ESC_KEYCODE) {
                 props.handleModal({ isVisible: false })
@@ -17,9 +17,10 @@ const Modal = ModalComponent => (props) => {
         }
         window.addEventListener('keydown', close)
         return () => window.removeEventListener('keydown', close)
-    }, []);*/
+    }, []);
 
     return createPortal(
+
         <div style={{ visibility: props.isActive.isVisible ? 'visible' : 'hidden' }}>
             <ModalOverlay handleModal={props.handleModal} />
             <section className={ModalStyles.section + ' ' + 'pt-10 pb-15'}>
@@ -29,17 +30,17 @@ const Modal = ModalComponent => (props) => {
                         onClick={() => (props.handleModal({ isVisible: false }))}>
                     </img>
                 </div>
-                <ModalComponent {...props.props} />
+                {props.children(props.props)}
             </section>
         </div>, document.querySelector('#root')
     )
 };
 
-Modal.propTypes = {
+ModalComponent.propTypes = {
     props: PropTypes.object.isRequired,
     isActive: PropTypes.object.isRequired,
     handleModal: PropTypes.func.isRequired,
     heading: PropTypes.string
 }
 
-export default Modal;
+export default ModalComponent;

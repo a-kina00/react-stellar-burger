@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ingredientStyles from './ingredient.module.css';
-import Modal from "../../hocs/modal";
+import ModalComponent from "../../hocs/modal";
 import IngredientDetails from "../ingredientDetails/ingredientDetails";
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function Ingredient(props) {
-    const IngredientDetailsModal = Modal(IngredientDetails);
     const [modalActive, handleModal] = React.useState({ isVisible: false });
 
     const ingredient = findIngredient();
@@ -27,7 +26,7 @@ function Ingredient(props) {
     }
 
     return (<div>
-        <IngredientDetailsModal props={ingredient} isActive={modalActive} handleModal={handleModal} heading={'Детали ингридиента'} />
+        <ModalComponent props={ingredient} isActive={modalActive} handleModal={handleModal} heading={'Детали ингридиента'}>{IngredientDetails}</ModalComponent>
         <div className={ingredientStyles.ingredient + ' ' + 'm-4'} onClick={() => { handleModal({ isVisible: true }) }}>
             <div>
                 {(current > 0) ? <Counter count={current} size="default" extraClass="m-1" /> : ''}
