@@ -10,17 +10,17 @@ const ESC_KEYCODE = 27;
 
 const requirements = () => {
     return {
-        _id: PropTypes.string,
-        calories: PropTypes.number,
-        carbohydrates: PropTypes.number,
-        fat: PropTypes.number,
+        _id: PropTypes.string.isRequired,
+        calories: PropTypes.number.isRequired,
+        carbohydrates: PropTypes.number.isRequired,
+        fat: PropTypes.number.isRequired,
         image: PropTypes.string,
-        image_large: PropTypes.string,
-        image_mobile: PropTypes.string,
-        name: PropTypes.string,
-        price: PropTypes.number,
-        proteins: PropTypes.number,
-        type: PropTypes.string
+        image_large: PropTypes.string.isRequired,
+        image_mobile: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        proteins: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired
     }
 }
 
