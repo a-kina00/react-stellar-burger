@@ -1,14 +1,27 @@
+import React from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
+import { ESC_KEYCODE } from '../utils/const';
 import ModalStyles from './modal.module.css'
 import icon from '../images/icon 24x24.svg'
 import ModalOverlay from '../components/modalOverlay/modalOverlay';
 
 const Modal = ModalComponent => (props) => {
 
-    return (
+/*  React.useEffect(() => {
+        const close = (e) => {
+            if (e.keyCode === ESC_KEYCODE) {
+                props.handleModal({ isVisible: false })
+            }
+        }
+        window.addEventListener('keydown', close)
+        return () => window.removeEventListener('keydown', close)
+    }, []);*/
+
+    return createPortal(
         <div style={{ visibility: props.isActive.isVisible ? 'visible' : 'hidden' }}>
-            <ModalOverlay handleModal={props.handleModal}/>
+            <ModalOverlay handleModal={props.handleModal} />
             <section className={ModalStyles.section + ' ' + 'pt-10 pb-15'}>
                 <div className={ModalStyles.title}>
                     <h1 className="text text_type_main-large">{props.heading}</h1>
@@ -18,7 +31,7 @@ const Modal = ModalComponent => (props) => {
                 </div>
                 <ModalComponent {...props.props} />
             </section>
-        </div>
+        </div>, document.querySelector('#root')
     )
 };
 

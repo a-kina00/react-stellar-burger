@@ -9,7 +9,6 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function Ingredient(props) {
-
     const IngredientDetailsModal = Modal(IngredientDetails);
     const [modalActive, handleModal] = React.useState({ isVisible: false });
 
@@ -26,16 +25,6 @@ function Ingredient(props) {
         count = current + 1;
         setCurrent(count);
     }
-
-    React.useEffect(() => {
-        const close = (e) => {
-            if (e.keyCode === 27) {
-                handleModal({ isVisible: false })
-            }
-        }
-        window.addEventListener('keydown', close)
-        return () => window.removeEventListener('keydown', close)
-    }, []);
 
     return (<div>
         <IngredientDetailsModal props={ingredient} isActive={modalActive} handleModal={handleModal} heading={'Детали ингридиента'} />

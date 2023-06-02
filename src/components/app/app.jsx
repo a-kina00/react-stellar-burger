@@ -1,19 +1,17 @@
 import styles from "./app.module.css";
+import { getInfo } from "../../utils/burger-api";
 import React from "react";
-import ReactDOM from 'react-dom';
 
 import AppHeader from "../appHeader/appHeader";
 import BurgerIngredients from "../burgerIngredients/burgerIngredients";
 import BurgerConstructor from "../burgerConstructor/burgerConstructor";
-import OrderDetails from "../orderDetails/orderDetails";
 
 function App() {
+  const [status, setStatus] = React.useState(null);
   const [data, setData] = React.useState(null);
+  
   React.useEffect(() => {
-    fetch('https://norma.nomoreparties.space/api/ingredients')
-      .then(res => res.json())
-      .then(json => setData(json.data))
-      .catch(error => console.error(error));
+    getInfo(setData, setStatus, 'ingredients');
   }, []);
 
   return (
@@ -24,9 +22,9 @@ function App() {
       }}>
        <AppHeader />{ data ? 
        (<section className={styles.content}>
-          <BurgerIngredients props={data}/>
-          <BurgerConstructor props={data}/>
-        </section>) : 'Loading...'}
+          <BurgerIngredients ingredients={data}/>
+          <BurgerConstructor />
+        </section>) : (status ? (`${status}`) : 'Lodaing...')}
       </pre>
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import burgerIngredientsStyles from './burgerIngredients.module.css';
 
+import { requirements } from '../../utils/const';
 import Ingredient from '../ingredient/ingredient';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -43,19 +44,19 @@ function BurgerIngredients(props) {
             <ul className={burgerIngredientsStyles.list + ' ' + 'custom-scroll'}>
                 <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('bun', props.props)}
+                        {renderIngridient('bun', props.ingredients)}
                     </div>
                 </li>
                 <li>
                     <h2 id='2' className="text text_type_main-medium">Соусы</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('sauce', props.props)}
+                        {renderIngridient('sauce', props.ingredients)}
                     </div>
                 </li>
                 <li>
                     <h2 id='3' className="text text_type_main-medium">Начинки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('main', props.props)}
+                        {renderIngridient('main', props.ingredients)}
                     </div>
                 </li>
             </ul>
@@ -64,7 +65,7 @@ function BurgerIngredients(props) {
 }
 
 Ingredient.propTypes = {
-    props: PropTypes.array.isRequired
+    props: PropTypes.arrayOf(PropTypes.shape({requirements})).isRequired
 }
 
 export default BurgerIngredients;
