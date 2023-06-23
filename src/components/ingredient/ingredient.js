@@ -10,6 +10,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function Ingredient(props) {
     const [modalActive, handleModal] = React.useState({ isVisible: false });
+    //const [ingredientsList, handleList] = React.useState([]);
 
     const ingredient = findIngredient();
     const [current, setCurrent] = React.useState(0);
@@ -25,9 +26,11 @@ function Ingredient(props) {
         setCurrent(count);
     }
 
+/*<ModalComponent props={ingredient} isActive={modalActive} handleModal={handleModal} heading={'Детали ингридиента'}>{IngredientDetails}</ModalComponent>
+        <div className={ingredientStyles.ingredient + ' ' + 'm-4'} onClick={() => { handleModal({ isVisible: true }) }}></div>*/
+
     return (<div>
-        <ModalComponent props={ingredient} isActive={modalActive} handleModal={handleModal} heading={'Детали ингридиента'}>{IngredientDetails}</ModalComponent>
-        <div className={ingredientStyles.ingredient + ' ' + 'm-4'} onClick={() => { handleModal({ isVisible: true }) }}>
+        <div className={ingredientStyles.ingredient + ' ' + 'm-4'} onClick={() => { props.createList(ingredient._id, ingredient.type) }}>
             <div>
                 {(current > 0) ? <Counter count={current} size="default" extraClass="m-1" /> : ''}
             </div>
