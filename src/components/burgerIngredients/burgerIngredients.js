@@ -29,10 +29,11 @@ function BurgerIngredients(props) {
         return arr;
     }
     
-    function createList(id, type) {
+    function createList(id, type, price) {
         let curr = {};
         curr.id = id;
         curr.type = type;
+        curr.price = price;
 
         const currentList = cart.concat([curr]);
         addToCart(currentList)

@@ -8,8 +8,9 @@ import constructorBlockStyles from './constructorBlock.module.css';
 function ConstructorBlock(props) {
     
     React.useEffect(() => {
-        props.updateData(ingredient.price, ingredient._id)
+        props.updateData(ingredient.price)
     });
+    
     const data = React.useContext(Context).data;
     const ingredient = findIngredient();
    
