@@ -6,7 +6,7 @@ import { requirements } from '../../utils/const';
 import Ingredient from '../ingredient/ingredient';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
-import { Context } from "../../utils/context";
+import { Context } from "../../services/context";
 
 function BurgerIngredients(props) {
 

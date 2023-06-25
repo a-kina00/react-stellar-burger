@@ -1,7 +1,5 @@
-import React from "react";
 import PropTypes from 'prop-types';
 
-import { orderBurger } from '../../utils/burger-api';
 import orderDetailsStyles from './orderDetails.module.css'
 import graphics from '../../images/graphics.svg'
 

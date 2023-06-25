@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Context } from '../../utils/context';
+import { Context } from '../../services/context';
 
 import { CurrencyIcon, LockIcon, DeleteIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import constructorBlockStyles from './constructorBlock.module.css';
 
 function ConstructorBlock(props) {
-    
-    React.useEffect(() => {
-        props.updateData(ingredient.price)
-    });
-    
     const data = React.useContext(Context).data;
     const ingredient = findIngredient();
-   
+
+    React.useEffect(() => {
+        props.updateData()
+    });
+    
     function findIngredient() {
         const index = data.findIndex(el => el._id === props.id);
         return data[index];
