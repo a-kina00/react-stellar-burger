@@ -27,7 +27,7 @@ function BurgerConstructor() {
 
     const { price } = React.useMemo(() => {
         return {
-            price: currCart[0] ? currCart.map(item => item.price).reduce((prev, item) => prev+item) : [0]
+            price: currCart[0] ? currCart.map(item => item.price).reduce((prev, item) => prev + item) : [0]
         };
     }, [currCart]);
 
@@ -42,7 +42,7 @@ function BurgerConstructor() {
 
     function createAnOrder() {
         const order = currCart.map(ingredient => ingredient.id)
-        order.unshift(order[order.length-1]);
+        order.unshift(order[order.length - 1]);
         return order;
     }
 
@@ -72,7 +72,7 @@ function BurgerConstructor() {
                         <CurrencyIcon type="primary" />
                     </div>
                     <Button htmlType="button" type="primary" size="large"
-                        onClick={() => { clickBtn() }}>
+                        onClick={clickBtn}>
                         Оформить заказ
                     </Button>
                 </div>
