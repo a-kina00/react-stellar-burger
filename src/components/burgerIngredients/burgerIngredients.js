@@ -1,18 +1,38 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from "react-redux";
 import burgerIngredientsStyles from './burgerIngredients.module.css';
 
-import { requirements } from '../../utils/const';
+import { UPD_DATA } from '../../services/actions/ingredients';
 import Ingredient from '../ingredient/ingredient';
+import { getInfo } from '../../utils/burger-api';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
-import { Context } from "../../services/context";
 
-function BurgerIngredients(props) {
+function BurgerIngredients() {
 
-    const addToCart = React.useContext(Context).addToCart;
-    const cart = React.useContext(Context).cart;
     const [current, setCurrent] = React.useState('1');
+    const [status, setStatus] = React.useState(null);
+    const [data, setData] = React.useState(null);
+    const [currCart, addToCart] = React.useState([]);
+
+    React.useEffect(() => {
+        getInfo(setData, setStatus);
+    }, []);
+    
+    React.useEffect(() => {
+        dispatch({ type: UPD_DATA, data: data, title: 'data' })
+        dispatch({ type: UPD_DATA, data: currCart, title: 'currCart' })
+    });
+    
+    const dispatch = useDispatch();
+
+    const { bun, sauce, main } = React.useMemo(() => {
+        return {
+            bun: data ? data.filter(item => item.type === 'bun') : [],
+            sauce: data ? data.filter(item => item.type == 'sauce') : [],
+            main: data ? data.filter(item => item.type == 'main') : []
+        };
+    }, [data]);
 
     const setTab = (tab) => {
         setCurrent(tab);
@@ -20,22 +40,13 @@ function BurgerIngredients(props) {
         if (element) element.scrollIntoView({ behavior: "smooth" });
     };
 
-    function renderIngridient(type, list) {
-        const el = list.filter((element) => { return element.type === type });
-
-        const arr = el.map((item) => {
-            return <Ingredient key={item._id} id={item._id} count={0} props={el} createList={createList} />
-        })
-        return arr;
-    }
-    
     function createList(id, type, price) {
         let curr = {};
         curr.id = id;
         curr.type = type;
         curr.price = price;
 
-        const currentList = cart.concat([curr]);
+        const currentList = currCart.concat([curr]);
         addToCart(currentList)
     }
 
@@ -57,28 +68,30 @@ function BurgerIngredients(props) {
             <ul className={burgerIngredientsStyles.list + ' ' + 'custom-scroll'}>
                 <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('bun', props.ingredients)}
+                        {bun.map((item) => {
+                            return <Ingredient key={item._id} id={item._id} count={0} props={bun} createList={createList} draggable/>
+                        })}
                     </div>
                 </li>
                 <li>
                     <h2 id='2' className="text text_type_main-medium">Соусы</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('sauce', props.ingredients)}
+                        {sauce.map((item) => {
+                            return <Ingredient key={item._id} id={item._id} count={0} props={sauce} createList={createList} draggable/>
+                        })}
                     </div>
                 </li>
                 <li>
                     <h2 id='3' className="text text_type_main-medium">Начинки</h2>
                     <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('main', props.ingredients)}
+                        {main.map((item) => {
+                            return <Ingredient key={item._id} id={item._id} count={0} props={main} createList={createList} draggable/>
+                        })}
                     </div>
                 </li>
             </ul>
         </section>
     );
-}
-
-Ingredient.propTypes = {
-    props: PropTypes.arrayOf(PropTypes.shape({ requirements })).isRequired
 }
 
 export default BurgerIngredients;

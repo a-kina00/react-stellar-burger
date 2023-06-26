@@ -1,8 +1,12 @@
 import styles from "./app.module.css";
-import { getInfo, orderBurger } from "../../utils/burger-api";
+import { getInfo } from "../../utils/burger-api";
+import { createStore } from 'redux';
+import { useSelector } from "react-redux";
+import { Provider } from 'react-redux';
 import React from "react";
 
 import { Context } from "../../services/context";
+import { rootReducer, dataList } from "../../services/reducers/ingredients";
 import AppHeader from "../appHeader/appHeader";
 import BurgerIngredients from "../burgerIngredients/burgerIngredients";
 import BurgerConstructor from "../burgerConstructor/burgerConstructor";
@@ -10,24 +14,29 @@ import BurgerConstructor from "../burgerConstructor/burgerConstructor";
 function App() {
   const [status, setStatus] = React.useState(null);
   const [data, setData] = React.useState(null);
-  const [cart, addToCart] = React.useState([]);
 
   React.useEffect(() => {
     getInfo(setData, setStatus);
   }, []);
 
+  const store = createStore(rootReducer);
+
+  //const ddata = useSelector(state => state.data)
+  // console.log(ddata)
   return (
-    <Context.Provider value={{ addToCart, cart, data }}>
-      <div className={styles.app}>
-        <div className={styles.section}>
-          <AppHeader />{data ?
-            (<section className={styles.content}>
-              <BurgerIngredients ingredients={data} />
-              <BurgerConstructor />
-            </section>) : (status ? (`${status}`) : 'Lodaing...')}
+    <Provider store={store}>
+      <Context.Provider value={{ data }}>
+        <div className={styles.app}>
+          <div className={styles.section}>
+            <AppHeader />{data ?
+              (<section className={styles.content}>
+                <BurgerIngredients />
+                <BurgerConstructor />
+              </section>) : (status ? (`${status}`) : 'Lodaing...')}
+          </div>
         </div>
-      </div>
-    </Context.Provider>
+      </Context.Provider>
+    </Provider>
   );
 }
 

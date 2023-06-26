@@ -5,6 +5,7 @@ import burgerConstructorStyles from './burgerConstructor.module.css'
 import ModalComponent from '../../hocs/modal';
 import OrderDetails from '../orderDetails/orderDetails';
 import { Context } from "../../services/context";
+import { useDispatch, useSelector } from "react-redux";
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -13,7 +14,18 @@ import ConstructorBlock from '../constructorBlock/constructorBlock'
 
 function BurgerConstructor() {
 
-    const cart = React.useContext(Context).cart;
+    //const dispatch = useDispatch();
+    //const data = useSelector(state => state.data)
+    // console.log(data)
+    /*
+        const add = () => {
+            dispatch({type: 'GET_DATA', data: 5})
+        }*/
+    const [account, setCurrent] = React.useState(0);
+    const [modalActive, handleModal] = React.useState({ isVisible: false });
+    const [status, setStatus] = React.useState(null);
+    const [order, setOrder] = React.useState(null);
+    const cart = useSelector(state => state.data.currCart);
 
     const { bun, filling } = React.useMemo(() => {
         return {
@@ -31,10 +43,7 @@ function BurgerConstructor() {
         };
     }, [currCart]);
 
-    const [account, setCurrent] = React.useState(0);
-    const [modalActive, handleModal] = React.useState({ isVisible: false });
-    const [status, setStatus] = React.useState(null);
-    const [order, setOrder] = React.useState(null);
+
 
     function updateData() {
         setCurrent(price);

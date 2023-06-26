@@ -13,7 +13,7 @@ function Ingredient(props) {
     const ingredient = findIngredient();
     const [current, setCurrent] = React.useState(0);
     let count = props.count;
-
+    
     function findIngredient() {
         const index = props.props.findIndex(el => el._id === props.id);
         return props.props[index];
