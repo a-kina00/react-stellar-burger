@@ -27,15 +27,22 @@
     composes: flex;
 
     justify-self: start;
+    color: #8585AD;
+    text-decoration: none;
+}
 
-    cursor: pointer;
+.currentBlock {
+    composes:block;
+    
+    color: white;
 }
 
 .login {
     composes: flex;
 
     justify-self: end;
-    cursor: pointer;
+    color: #8585AD;
+    text-decoration: none;
 }
 
 .hover {

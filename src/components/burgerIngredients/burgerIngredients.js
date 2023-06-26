@@ -6,9 +6,12 @@ import { requirements } from '../../utils/const';
 import Ingredient from '../ingredient/ingredient';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Context } from "../../services/context";
 
 function BurgerIngredients(props) {
 
+    const addToCart = React.useContext(Context).addToCart;
+    const cart = React.useContext(Context).cart;
     const [current, setCurrent] = React.useState('1');
 
     const setTab = (tab) => {
@@ -21,9 +24,19 @@ function BurgerIngredients(props) {
         const el = list.filter((element) => { return element.type === type });
 
         const arr = el.map((item) => {
-            return <Ingredient key={item._id} id={item._id} count={0} props={el} />
+            return <Ingredient key={item._id} id={item._id} count={0} props={el} createList={createList} />
         })
         return arr;
+    }
+    
+    function createList(id, type, price) {
+        let curr = {};
+        curr.id = id;
+        curr.type = type;
+        curr.price = price;
+
+        const currentList = cart.concat([curr]);
+        addToCart(currentList)
     }
 
     return (
@@ -65,7 +78,7 @@ function BurgerIngredients(props) {
 }
 
 Ingredient.propTypes = {
-    props: PropTypes.arrayOf(PropTypes.shape({requirements})).isRequired
+    props: PropTypes.arrayOf(PropTypes.shape({ requirements })).isRequired
 }
 
 export default BurgerIngredients;

@@ -13,3 +13,8 @@
   max-width: 100%;
   max-height: calc(100vh - 350px);
 }
+
+.section {
+  margin: "auto";
+  font-size: "1.5rem";
+}
