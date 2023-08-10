@@ -1,16 +1,16 @@
-import PropTypes from 'prop-types';
-
 import ModalOverlayStyles from './modalOverlay.module.css'
+import { useDispatch } from "react-redux";
+import { closeModal } from '../../services/reducers/ingredients';
 
-function ModalOverlay(props) {
+function ModalOverlay() {
+    const dispatch = useDispatch();
     return (
         <div className={ModalOverlayStyles.background}
-        onClick={() => {props.handleModal({ isVisible: false })}}></div>
+            onClick={() => {
+                dispatch(closeModal())
+            }}></div>
     )
 }
 
-ModalOverlay.propTypes = {
-    handleModal: PropTypes.func.isRequired,
-}
 
 export default ModalOverlay;
