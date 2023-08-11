@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from "react-redux";
-import { updateData } from '../../services/reducers/ingredients';
+import { updateConstructorData } from '../../services/actions/constructor';
 import { useDrag } from "react-dnd";
+import { shallowEqual } from 'react-redux';
 
 import { CurrencyIcon, LockIcon, DeleteIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import constructorBlockStyles from './constructorBlock.module.css';
@@ -10,8 +11,9 @@ import constructorBlockStyles from './constructorBlock.module.css';
 function ConstructorBlock(props) {
     const dispatch = useDispatch();
 
-    const data = useSelector(state => state.data.data);
-    const cart = useSelector(state => state.data.currCart);
+    const {data} = useSelector((state) => ({data: state.data.ingredientsSuccess}), shallowEqual);
+    const {cart} = useSelector((state) => ({cart: state.builder.currCart}), shallowEqual);
+
     const ingredient = findIngredient();
     ingredient.number = props.number;
 
@@ -27,7 +29,7 @@ function ConstructorBlock(props) {
     function deleteIngredient() {
         let newCart = cart.filter(el => el.number != ingredient.number)
         props.setDraggedElements(newCart)
-        dispatch(updateData({ data: newCart, title: 'currCart' }))
+        dispatch(updateConstructorData({ data: newCart }))
     }
 
     let position = constructorBlockStyles.middle;

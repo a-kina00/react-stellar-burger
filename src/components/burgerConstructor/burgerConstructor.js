@@ -2,10 +2,11 @@ import React from 'react';
 import { useDrop } from "react-dnd";
 
 import { orderBurger } from '../../utils/burger-api';
-import { updateData } from '../../services/reducers/ingredients';
+import { updateConstructorData } from '../../services/actions/constructor';
 import burgerConstructorStyles from './burgerConstructor.module.css'
 import ModalComponent from '../../hocs/modal';
 import { useDispatch } from "react-redux";
+import { v1 as uuid } from 'uuid';
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -22,7 +23,7 @@ function BurgerConstructor() {
     const [number, setNumber] = React.useState(0);
 
     React.useEffect(() => {
-        dispatch(updateData({ data: currCart, title: 'currCart' }))
+        dispatch(updateConstructorData({ data: currCart }))
     });
 
     const [, dropTarget] = useDrop({
@@ -32,6 +33,7 @@ function BurgerConstructor() {
 
     const handleDrop = (item) => {
         item.number = number
+        item.key = uuid()
         setNumber(number + 1)
 
         setDraggedElements([
@@ -101,14 +103,14 @@ function BurgerConstructor() {
             <ModalComponent></ModalComponent>
 
             {cart[0] ? <>
-                {bun ? <ConstructorBlock key={bun.id} id={bun.id} position='top' updateData={setPrice} /> : ''}
+                {bun ? <ConstructorBlock key={uuid()} id={bun.id} position='top' updateData={setPrice} /> : ''}
                 <ul className={burgerConstructorStyles.list + ' ' + 'custom-scroll pr-2 mt-4 mb-4'}>
-                    {sortCart().map((element, index) => {
-                        return <ConstructorBlock key={index} number={element.number} id={element.id} position='' updateData={setPrice} element={element} setDraggedElements={setDraggedElements}
+                    {sortCart().map((element) => {
+                        return <ConstructorBlock key={element.key} number={element.number} id={element.id} position='' updateData={setPrice} element={element} setDraggedElements={setDraggedElements}
                             setCurrentIngr={setCurrentIngr} setPrevIngr={setPrevIngr} />
                     })}
                 </ul>
-                {bun ? <ConstructorBlock key={bun.key} id={bun.id} position='bottom' updateData={setPrice} /> : ''}
+                {bun ? <ConstructorBlock key={uuid()} id={bun.id} position='bottom' updateData={setPrice} /> : ''}
             </> : ''}
 
             <div>

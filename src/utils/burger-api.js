@@ -1,18 +1,19 @@
 import { BURGER_API_URL, checkReponse } from "./const"
-import { openModal } from "../services/reducers/ingredients";
-import { updateData } from "../services/reducers/ingredients";
-
+import { ingredientRequest, ingredientSuccess, ingredientFailure } from "../services/actions/ingredients";
+import { orderRequest, orderSuccess, orderFailure } from "../services/actions/order";
+import { openModal } from "../services/actions/modal";
 
 function getInfo() {
     return function (dispatch) {
         fetch(`${BURGER_API_URL}/ingredients`)
             .then(checkReponse)
             .then(json => {
-                dispatch(updateData({ data: json.data, title: 'data' }))
+                dispatch(ingredientRequest())
+                dispatch(ingredientSuccess({ ingredients: json.data }))
             })
             .catch(error => {
                 console.error(error);
-                dispatch(updateData({ data: error, title: 'errorMsg' }))
+                dispatch(ingredientFailure({ message: error }))
             });
     }
 }
@@ -26,12 +27,13 @@ function orderBurger(ingredients) {
         })
             .then(checkReponse)
             .then(json => {
-                dispatch(updateData({ data: json.order.number, title: 'order' }))
+                dispatch(orderRequest())
+                dispatch(orderSuccess({ order: json.order.number }))
                 dispatch(openModal({ title: 'order' }))
             })
             .catch(error => {
                 console.error(error);
-                dispatch(updateData({ data: error, title: 'errorMsg' }))
+                dispatch(orderFailure({ message: error }))
             });
     }
 }

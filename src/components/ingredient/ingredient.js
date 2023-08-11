@@ -1,10 +1,12 @@
 import React from 'react';
 import { useDrag } from "react-dnd";
 import { useDispatch, useSelector } from "react-redux";
-import { openModal, updateData } from '../../services/reducers/ingredients';
+import { openModal } from '../../services/actions/modal';
 import PropTypes from 'prop-types';
 import ingredientStyles from './ingredient.module.css';
 import ModalComponent from '../../hocs/modal';
+import { shallowEqual } from 'react-redux';
+import { setCurrentIngredient } from '../../services/actions/ingredients';
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
@@ -12,7 +14,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 function Ingredient(props) {
     const dispatch = useDispatch();
 
-    const cart = useSelector(state => state.data.currCart);
+    const { cart } = useSelector((state) => ({ cart: state.builder.currCart }), shallowEqual);
     const ingredient = findIngredient();
     const [current, setCurrent] = React.useState(0);
     let count = 0;
@@ -24,15 +26,14 @@ function Ingredient(props) {
     }
 
     React.useEffect(() => {
-        
         cart.forEach(element => {
             if (element.id == ingredient._id) {
                 count++
                 setCurrent(count)
-            } 
+            }
         })
 
-        if (!cart.some(element => element.id == ingredient._id)) setCurrent(0) 
+        if (!cart.some(element => element.id == ingredient._id)) setCurrent(0)
 
     }, [cart])
 
@@ -47,7 +48,7 @@ function Ingredient(props) {
     }
 
     function click() {
-        dispatch(updateData({ data: ingredient, title: 'currIngredient' }))
+        dispatch(setCurrentIngredient({ ingredient: ingredient }))
         dispatch(openModal({ title: 'ingredient' }))
     }
 

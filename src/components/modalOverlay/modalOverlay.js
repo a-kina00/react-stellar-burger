@@ -1,6 +1,6 @@
 import ModalOverlayStyles from './modalOverlay.module.css'
 import { useDispatch } from "react-redux";
-import { closeModal } from '../../services/reducers/ingredients';
+import { closeModal } from '../../services/actions/modal.js';
 
 function ModalOverlay() {
     const dispatch = useDispatch();
@@ -8,7 +8,9 @@ function ModalOverlay() {
         <div className={ModalOverlayStyles.background}
             onClick={() => {
                 dispatch(closeModal())
-            }}></div>
+            }}>
+
+        </div>
     )
 }
 

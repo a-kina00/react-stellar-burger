@@ -1,13 +1,26 @@
 import React from "react";
-import {createRoot} from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./components/app/app";
 import reportWebVitals from "./reportWebVitals";
+import { Provider } from 'react-redux';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { composeWithDevTools } from "redux-devtools-extension";
+import { createStore } from 'redux';
+import { applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { rootReducer } from "./services/reducers/root";
 
-
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 const root = createRoot(document.getElementById("root"));
+
 root.render(<React.StrictMode>
-  <App />
+  <DndProvider backend={HTML5Backend}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </DndProvider >
 </React.StrictMode>);
 
 

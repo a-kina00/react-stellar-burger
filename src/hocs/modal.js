@@ -2,21 +2,22 @@ import React from 'react';
 import { createPortal } from 'react-dom';
 
 import { ESC_KEYCODE } from '../utils/const';
-import { closeModal } from '../services/reducers/ingredients';
+import { closeModal } from '../services/actions/modal.js';
 import ModalStyles from './modal.module.css'
 import icon from '../images/icon 24x24.svg'
 import ModalOverlay from '../components/modalOverlay/modalOverlay';
 import { useDispatch, useSelector } from "react-redux";
 import IngredientDetails from '../components/ingredientDetails/ingredientDetails';
 import OrderDetails from '../components/orderDetails/orderDetails';
+import { shallowEqual } from 'react-redux';
 
 const ModalComponent = () => {
     const dispatch = useDispatch();
-    const ingrInfo = useSelector(state => state.data.currIngredient)
-    const isVisible = useSelector(state => state.data.modalIsVisible)
-    const orderInfo = useSelector(state => state.data.order)
-    const modalType = useSelector(state => state.data.modalType)
-    const err = useSelector(state => state.data.errorMsg);
+    const { ingrInfo } = useSelector((state) => ({ ingrInfo: state.data.currIngredient }), shallowEqual)
+    const { isVisible } = useSelector((state) => ({ isVisible: state.modal.modalIsVisible }), shallowEqual)
+    const { orderInfo } = useSelector((state) => ({ orderInfo: state.order.orderSuccess }), shallowEqual)
+    const { modalType } = useSelector((state) => ({ modalType: state.modal.modalType }), shallowEqual)
+    const { err } = useSelector((state) => ({ err: state.order.orderFailure }), shallowEqual)
 
     React.useEffect(() => {
         const close = (e) => {

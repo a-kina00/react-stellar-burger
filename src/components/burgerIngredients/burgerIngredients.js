@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import burgerIngredientsStyles from './burgerIngredients.module.css';
 import Ingredient from '../ingredient/ingredient';
 import { getInfo } from '../../utils/burger-api';
+import { v1 as uuid } from 'uuid';
+import { shallowEqual } from 'react-redux';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function BurgerIngredients() {
     const dispatch = useDispatch();
     const [current, setCurrent] = React.useState('1');
-    const data = useSelector(state => state.data.data);
-    const err = useSelector(state => state.data.errorMsg);
+    const { data } = useSelector((state) => ({ data: state.data.ingredientsSuccess }), shallowEqual);
+    const { err } = useSelector((state) => ({ err: state.data.ingredientsFailure }), shallowEqual);
 
     React.useEffect(() => {
         getInfo()(dispatch)
@@ -49,7 +51,8 @@ function BurgerIngredients() {
                     <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
                         <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
                             {bun.map((item) => {
-                                return <Ingredient key={item._id} id={item._id} type='bun' props={bun} draggable={true} />
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='bun' props={bun} draggable={true} />
                             })}
                         </div>
                     </li>
@@ -57,7 +60,8 @@ function BurgerIngredients() {
                         <h2 id='2' className="text text_type_main-medium">Соусы</h2>
                         <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
                             {sauce.map((item) => {
-                                return <Ingredient key={item._id} id={item._id} type='sauce' props={sauce} draggable={true} />
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='sauce' props={sauce} draggable={true} />
                             })}
                         </div>
                     </li>
@@ -65,7 +69,8 @@ function BurgerIngredients() {
                         <h2 id='3' className="text text_type_main-medium">Начинки</h2>
                         <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
                             {main.map((item) => {
-                                return <Ingredient key={item._id} id={item._id} type='main' props={main} draggable={true} />
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='main' props={main} draggable={true} />
                             })}
                         </div>
                     </li>
