@@ -1,27 +1,78 @@
 import React from 'react';
+import { useDrop } from "react-dnd";
 
 import { orderBurger } from '../../utils/burger-api';
+import { updateConstructorData } from '../../services/actions/constructor';
 import burgerConstructorStyles from './burgerConstructor.module.css'
 import ModalComponent from '../../hocs/modal';
-import OrderDetails from '../orderDetails/orderDetails';
-import { Context } from "../../services/context";
+import { useDispatch } from "react-redux";
+import { v1 as uuid } from 'uuid';
 
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components'
-
 import ConstructorBlock from '../constructorBlock/constructorBlock'
 
 function BurgerConstructor() {
+    const dispatch = useDispatch();
 
-    const cart = React.useContext(Context).cart;
+    const [draggedElements, setDraggedElements] = React.useState([]);
+    const [currIngr, setCurrentIngr] = React.useState(null)
+    const [prevIngr, setPrevIngr] = React.useState(null)
+    const cart = draggedElements.reverse().slice(0);
+    const [account, setCurrent] = React.useState(0);
+    const [number, setNumber] = React.useState(0);
 
+    React.useEffect(() => {
+        dispatch(updateConstructorData({ data: currCart }))
+    });
+
+    const [, dropTarget] = useDrop({
+        accept: "ingredient",
+        drop(item) { item.ingredient ? dropHandler() : handleDrop(item.id) }
+    });
+
+    const handleDrop = (item) => {
+        item.number = number
+        item.key = uuid()
+        setNumber(number + 1)
+
+        setDraggedElements([
+            ...draggedElements, item
+        ]);
+    };
+
+    function dropHandler() {
+        let newCart = draggedElements.map(el => {
+            if (el.number == prevIngr.number) {
+                el.number = currIngr.number;
+            } else
+                if (el.number == currIngr.number) {
+                    el.number = prevIngr.number;
+                }
+            return el
+        })
+        setDraggedElements(newCart)
+    }
+
+    function sortCart() {
+        return filling.sort(function (a, b) {
+            if (a.number > b.number) {
+                return 1;
+            }
+            if (a.number < b.number) {
+                return -1;
+            }
+        })
+    }
+
+    // Обрабатываем данные "брошенных" элементов
     const { bun, filling } = React.useMemo(() => {
         return {
-            bun: cart.find(item => item.type === 'bun'),
+            bun: cart.reverse().slice(0).find(item => item.type === 'bun'),
             filling: cart.filter(item => item.type !== 'bun'),
             price: cart.map(item => item.price)
-        };
-    }, [cart]);
+        }
+    }, [draggedElements]);
 
     const currCart = bun ? filling.concat(bun) : filling;
 
@@ -31,12 +82,7 @@ function BurgerConstructor() {
         };
     }, [currCart]);
 
-    const [account, setCurrent] = React.useState(0);
-    const [modalActive, handleModal] = React.useState({ isVisible: false });
-    const [status, setStatus] = React.useState(null);
-    const [order, setOrder] = React.useState(null);
-
-    function updateData() {
+    function setPrice() {
         setCurrent(price);
     }
 
@@ -47,22 +93,24 @@ function BurgerConstructor() {
     }
 
     function clickBtn() {
-        handleModal({ isVisible: true });
-        orderBurger(createAnOrder(), setOrder, setStatus);
+        orderBurger(createAnOrder())(dispatch)
+        setDraggedElements([])
+        setCurrent(0)
     }
 
     return (
-        <section className={burgerConstructorStyles.section + ' ' + 'ml-15 mt-25'}>
-            <ModalComponent props={{ number: order, status: status }} isActive={modalActive} handleModal={handleModal}>{OrderDetails}</ModalComponent>
+        <section ref={dropTarget} className={burgerConstructorStyles.section + ' ' + 'ml-15 mt-25'}>
+            <ModalComponent></ModalComponent>
 
             {cart[0] ? <>
-                {bun ? <ConstructorBlock key={bun.id} id={bun.id} position='top' updateData={updateData} /> : ''}
+                {bun ? <ConstructorBlock key={uuid()} id={bun.id} position='top' updateData={setPrice} /> : ''}
                 <ul className={burgerConstructorStyles.list + ' ' + 'custom-scroll pr-2 mt-4 mb-4'}>
-                    {filling.map((element, index) => {
-                        return <ConstructorBlock key={index} id={element.id} position='' updateData={updateData} />
+                    {sortCart().map((element) => {
+                        return <ConstructorBlock key={element.key} number={element.number} id={element.id} position='' updateData={setPrice} element={element} setDraggedElements={setDraggedElements}
+                            setCurrentIngr={setCurrentIngr} setPrevIngr={setPrevIngr} />
                     })}
                 </ul>
-                {bun ? <ConstructorBlock key={bun.key} id={bun.id} position='bottom' updateData={updateData} /> : ''}
+                {bun ? <ConstructorBlock key={uuid()} id={bun.id} position='bottom' updateData={setPrice} /> : ''}
             </> : ''}
 
             <div>
@@ -77,6 +125,7 @@ function BurgerConstructor() {
                     </Button>
                 </div>
             </div>
+
         </section>
     )
 }

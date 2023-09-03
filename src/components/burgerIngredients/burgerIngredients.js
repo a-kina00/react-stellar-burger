@@ -1,43 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from "react-redux";
 import burgerIngredientsStyles from './burgerIngredients.module.css';
-
-import { requirements } from '../../utils/const';
 import Ingredient from '../ingredient/ingredient';
+import { getInfo } from '../../utils/burger-api';
+import { v1 as uuid } from 'uuid';
+import { shallowEqual } from 'react-redux';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
-import { Context } from "../../services/context";
 
-function BurgerIngredients(props) {
-
-    const addToCart = React.useContext(Context).addToCart;
-    const cart = React.useContext(Context).cart;
+function BurgerIngredients() {
+    const dispatch = useDispatch();
     const [current, setCurrent] = React.useState('1');
+    const { data } = useSelector((state) => ({ data: state.data.ingredientsSuccess }), shallowEqual);
+    const { err } = useSelector((state) => ({ err: state.data.ingredientsFailure }), shallowEqual);
+
+    React.useEffect(() => {
+        getInfo()(dispatch)
+    }, []);
+
+    const { bun, sauce, main } = React.useMemo(() => {
+        return {
+            bun: data ? data.filter(item => item.type == 'bun') : [],
+            sauce: data ? data.filter(item => item.type == 'sauce') : [],
+            main: data ? data.filter(item => item.type == 'main') : []
+        };
+    }, [data]);
 
     const setTab = (tab) => {
         setCurrent(tab);
         const element = document.getElementById(tab);
         if (element) element.scrollIntoView({ behavior: "smooth" });
     };
-
-    function renderIngridient(type, list) {
-        const el = list.filter((element) => { return element.type === type });
-
-        const arr = el.map((item) => {
-            return <Ingredient key={item._id} id={item._id} count={0} props={el} createList={createList} />
-        })
-        return arr;
-    }
-    
-    function createList(id, type, price) {
-        let curr = {};
-        curr.id = id;
-        curr.type = type;
-        curr.price = price;
-
-        const currentList = cart.concat([curr]);
-        addToCart(currentList)
-    }
 
     return (
         <section className={burgerIngredientsStyles.section}>
@@ -53,32 +46,37 @@ function BurgerIngredients(props) {
                     Начинки
                 </Tab>
             </div>
-
-            <ul className={burgerIngredientsStyles.list + ' ' + 'custom-scroll'}>
-                <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
-                    <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('bun', props.ingredients)}
-                    </div>
-                </li>
-                <li>
-                    <h2 id='2' className="text text_type_main-medium">Соусы</h2>
-                    <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('sauce', props.ingredients)}
-                    </div>
-                </li>
-                <li>
-                    <h2 id='3' className="text text_type_main-medium">Начинки</h2>
-                    <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
-                        {renderIngridient('main', props.ingredients)}
-                    </div>
-                </li>
-            </ul>
+            {err ? <h2>{err}</h2> :
+                <ul className={burgerIngredientsStyles.list + ' ' + 'custom-scroll'}>
+                    <li><h2 id='1' className="text text_type_main-medium">Булки</h2>
+                        <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
+                            {bun.map((item) => {
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='bun' props={bun} draggable={true} />
+                            })}
+                        </div>
+                    </li>
+                    <li>
+                        <h2 id='2' className="text text_type_main-medium">Соусы</h2>
+                        <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
+                            {sauce.map((item) => {
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='sauce' props={sauce} draggable={true} />
+                            })}
+                        </div>
+                    </li>
+                    <li>
+                        <h2 id='3' className="text text_type_main-medium">Начинки</h2>
+                        <div className={burgerIngredientsStyles.options + ' ' + 'ml-4 mt-6 mb-10 mr-4'}>
+                            {main.map((item) => {
+                                item.key = uuid();
+                                return <Ingredient key={item.key} id={item._id} type='main' props={main} draggable={true} />
+                            })}
+                        </div>
+                    </li>
+                </ul>}
         </section>
     );
-}
-
-Ingredient.propTypes = {
-    props: PropTypes.arrayOf(PropTypes.shape({ requirements })).isRequired
 }
 
 export default BurgerIngredients;
