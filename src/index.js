@@ -11,6 +11,7 @@ import { createStore } from 'redux';
 import { applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { rootReducer } from "./services/reducers/root";
+import { BrowserRouter } from 'react-router-dom'
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 const root = createRoot(document.getElementById("root"));
@@ -18,7 +19,9 @@ const root = createRoot(document.getElementById("root"));
 root.render(<React.StrictMode>
   <DndProvider backend={HTML5Backend}>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </DndProvider >
 </React.StrictMode>);
